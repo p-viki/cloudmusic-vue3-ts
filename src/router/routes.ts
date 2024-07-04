@@ -11,7 +11,12 @@ const routes : RouteRecordRaw[] = [
                 path: '/trending',
                 name: 'Trending',
                 component: () => import('../pages/trending.vue')
-            }
+            },
+            {
+                path: '/list',
+                name: 'List',
+                component: () => import('../pages/list.vue')
+            },
         ]
     }
   ]

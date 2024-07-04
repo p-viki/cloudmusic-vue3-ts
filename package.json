@@ -10,7 +10,9 @@
   },
   "dependencies": {
     "pinia": "^2.1.7",
+    "unplugin-auto-import": "^0.17.6",
     "vue": "^3.4.29",
+    "vue-global-api": "^0.4.1",
     "vue-router": "^4.4.0"
   },
   "devDependencies": {
