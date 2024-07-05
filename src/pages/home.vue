@@ -29,7 +29,10 @@ import PlayerBar from "../components/PlayerBar/index.vue"
 
     .home-content {
         padding-left: 196px;
+        box-sizing: border-box;
         width: 100%;
+        height: calc(100vh- 80px);
+        overflow: auto;
     }
 }
 </style>
