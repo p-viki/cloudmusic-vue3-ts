@@ -39,9 +39,14 @@ const keyword = ref('')
         line-height: 64px;
         span {
             margin-right: 20px;
+            cursor: pointer;
         }
         .iconfont {
             font-size: 20px;
+            cursor: pointer;
+        }
+        .iconfont:hover {
+            color: var(--theme-hover-color);
         }
     }
 }

@@ -58,6 +58,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+        box-shadow: 0px -1px 5px 1px #dadada1c;
         .iconfont {
             cursor: pointer;
         }
