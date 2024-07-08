@@ -1,5 +1,5 @@
 <template>
-    <div :class="{'input-wrapper':true, 'input-wrapper__active': focusStatus === 'focus'}">
+    <div :class="{'input-wrapper':true, 'input-wrapper__active': focusStatus === 'focus'}" :style="computedStyle">
         <div class="prepend">
             <i class="iconfont icon-search"></i>
         </div>
@@ -17,12 +17,27 @@
 </template>
 
 <script setup>
-import { defineEmits, defineProps, ref } from 'vue';
+import { defineEmits, defineProps, ref, computed } from 'vue';
 const props = defineProps({
   modelValue: String,
-  placeholder: String
+  placeholder: String,
+  height: {
+    type: Number,
+    default() {
+        return 32
+    }
+  }
 });
+
 const emits = defineEmits(['update:modelValue']);
+
+const computedStyle = computed(() => {
+    return {
+        height: `${props.height}px`
+    }
+})
+
+console.log(computedStyle.value);
 
 const focusStatus = ref('blur')
 const handleFocus = (status) => {
@@ -36,7 +51,7 @@ const handleFocus = (status) => {
     display: flex;
     border: 1px solid var(--theme-border-color);
     width: 200px;
-    height: 28px;
+    // height: 28px;
     border-radius: 14px;
     
     .input {
@@ -63,8 +78,9 @@ const handleFocus = (status) => {
         top: 0;
         bottom: 0;
         width: 30px;
-        text-align: center;
-        line-height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         color: var(--theme-color);
     }
     &__active {

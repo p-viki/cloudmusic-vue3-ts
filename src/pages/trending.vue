@@ -31,6 +31,7 @@ import swiper from "../components/Swiper/index.vue";
 <style lang="less" scoped>
 .trend-wrapper {
     min-height: 100%;
+    padding: 16px 32px;
     .swiper-item-content {
         width: 100%;
         height: 100%;

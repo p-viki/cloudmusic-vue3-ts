@@ -3,11 +3,9 @@
         <div ref="swiperContent" :class="{'swiper-content': true, 'swiper-content__nodrog': !isDragging}" :style="computedContentStyle" draggable>
             <slot></slot>
         </div>
-        <div class="swiper-handle swiper-handle__pre" @click="changeIndex(-1)"></div>
-        <div class="swiper-handle swiper-handle__next" @click="changeIndex(1)"></div>
-        <div class="swiper-pagination">
-
-        </div>
+        <ul class="swiper-pagination" :style="`width: ${itemLength * 15}px;transform: translate(-${itemLength * 15 / 2}px);`"   >
+            <li class="swiper-pagination-item"  v-for="item in itemLength" :key="item" @click="changeTo(item)"></li>
+        </ul> 
     </div>
 </template>
 
@@ -23,6 +21,12 @@ const props = defineProps({
     },
     height: {
         type: String,        
+    },
+    spaceBetween:  {
+        type: Number,
+        default() {
+            return 20
+        }
     },
     direction: {
         type: String,
@@ -40,13 +44,13 @@ const props = defineProps({
     duration: {
         type: Number,
         default() {
-            return 4000
+            return 3000
         }
     },
     draggable: {
         type: Boolean,
         default() {
-            return false
+            return true
         }
     }
 });
@@ -67,8 +71,13 @@ const activeIndex = ref(0)
 const itemLength = ref(0)
 const swiperContent = ref(null)
 const beforeOffset = ref(0)
+
+const changeTo = (index) => {
+    activeIndex.value = index - 1 
+    swiperContent.value.style.transform = `translate(-${activeIndex.value * props.width}px)`
+    beforeOffset.value = -activeIndex.value * props.width
+}
 const changeIndex = (step) => {
-    console.log(activeIndex.value === itemLength.value);
     if ((activeIndex.value === 0 && step < 0) || (activeIndex.value === itemLength.value - 1 && step > 0)) {
         return
     }
@@ -92,8 +101,9 @@ const initSwiper = () => {
 
     for(let item of items) {  
         item.style = `
-            width: ${props.width ? props.width + 'px' : '100%'};
+            width: ${props.width ? props.width - props.spaceBetween + 'px' : '100%'};
             height: ${props.height + 'px'};
+            margin: 0 ${props.spaceBetween / 2}px;
             display: flex;
             justify-content: center;
             align-items: center; 
@@ -102,15 +112,24 @@ const initSwiper = () => {
     }
 
     if (props.autoplay) {
-        autoplayTimer.value = setInterval(() => {
-            changeIndex(1)
-        }, props.duration)
+        const setTimer = (duration) => {
+            autoplayTimer.value = setInterval(() => {
+                console.log(autoplayTimer.value);
+                changeIndex(1)
+            }, duration)
+        }
+        swiperContent.value.addEventListener('mouseenter', () => {
+            clearInterval(autoplayTimer.value)
+        })
+        swiperContent.value.addEventListener('mouseleave', () => {
+            setTimer(props.duration)
+        })
+        setTimer(props.duration)
     }
     if (props.draggable) {
         swiperContent.value.addEventListener('mousedown', (event) => {
         isDragging.value = true
         startX.value = event.clientX - swiperContent.value.offsetLeft
-        
         const onMouseMove = (event) => {
             if (!isDragging.value) return;
             const x = event.clientX - startX.value;
@@ -146,16 +165,14 @@ onMounted(() => {
 </script>
 
 <style lang="less" scoped>
-.swiper {
-    
+.swiper {   
     &-wrapper {
         overflow: hidden;
         position: relative;
-        
     }
     &-content {
         display: flex;
-        cursor: grab;
+        cursor: pointer;
         
     }
     &-content__nodrog{
@@ -175,6 +192,24 @@ onMounted(() => {
         }
         &__next {
             right: 10px;
+        }
+    }
+    &-pagination {
+        
+        position: absolute;
+        bottom: 10px;
+        left: 50%;
+        display: flex;
+        justify-content: space-around;
+        &-item {
+            width: 10px;
+            height: 10px;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            &:hover {
+                background: rgba(255, 255, 255, 0.5);
+            } 
         }
     }
     
